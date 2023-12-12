@@ -9,6 +9,7 @@
 
 #include <string>
 #include <vector>
+#include "symboltable.h"
 using namespace std;
 
 #include "symboltable.h"
@@ -24,4 +25,8 @@ double SymbolTable::lookUp(string variable) const {
              return elements[i].value;
     return -1;
 }
+void SymbolTable::clear() {
+    elements.clear();
+}
+
 

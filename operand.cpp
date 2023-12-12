@@ -22,7 +22,10 @@ using namespace std;
 #include "variable.h"
 #include "literal.h"
 #include "parse.h"
-// Include headers for Unary, Binary, Ternary, Quaternary expressions and other operators
+#include "unaryexpression.h"       // Include header for UnaryExpression
+#include "binaryexpression.h"      // Include header for BinaryExpression
+#include "ternaryexpression.h"     // Include header for TernaryExpression
+#include "quaternaryexpression.h"  // Include header for QuaternaryExpression
 
 Expression* Operand::parse(stringstream& in) {
     char paren, operation;
@@ -39,7 +42,6 @@ Expression* Operand::parse(stringstream& in) {
         in >> ws;
         operation = in.peek();  // Check for operators or sub-expressions
 
-        // Implement logic to parse different types of expressions
         switch(operation) {
             case '+': // Binary Addition
             case '-': // Binary Subtraction
@@ -50,16 +52,36 @@ Expression* Operand::parse(stringstream& in) {
             case '<': // Minimum
             case '>': // Maximum
             case '&': // Average
+                in.ignore(); // Ignore the operation character
+                Expression* left = parse(in);
+                Expression* right = parse(in);
+                in >> paren; // Consume closing ')'
+                return new BinaryExpression(left, right, operation);
+
             case '?': // Ternary Conditional
+                in.ignore(); // Ignore the operation character
+                Expression* first = parse(in);
+                Expression* second = parse(in);
+                Expression* third = parse(in);
+                in >> paren; // Consume closing ')'
+                return new TernaryExpression(first, second, third, operation);
+
             case '#': // Quaternary Conditional
-                // Implement logic for each operator
-                // For example: return new BinaryExpression(left, right, operation);
-                break;
-            // ... handle other operators and expressions
+                in.ignore(); // Ignore the operation character
+                Expression* firstQ = parse(in);
+                Expression* secondQ = parse(in);
+                Expression* thirdQ = parse(in);
+                Expression* fourth = parse(in);
+                in >> paren; // Consume closing ')'
+                return new QuaternaryExpression(firstQ, secondQ, thirdQ, fourth, operation);
         }
 
-        in >> paren; // Consume closing ')'
-        // Return the created expression
+        // Handle Unary Expression
+        if (in.peek() == '~') {
+            in >> operation; // consume '~'
+            Expression* operand = parse(in);
+            return new UnaryExpression(operand, operation);
+        }
     }
     else
         return new Variable(parseName(in));

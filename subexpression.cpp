@@ -1,12 +1,3 @@
-// CMSC 330 Advanced Programming Languages
-// Project 2 Skeleton
-// UMGC CITE
-// Spring 2023
-
-// This file contains the body of the functions contained in The SubExpression class, which includes
-// the constructor that initializes the left and right subexpressions and the static function parse
-// parses the subexpression. Addition and subtraction are the two operators that are implemented.
-
 #include <iostream>
 #include <sstream>
 using namespace std;
@@ -14,8 +5,10 @@ using namespace std;
 #include "expression.h"
 #include "subexpression.h"
 #include "operand.h"
-#include "plus.h"
-#include "minus.h"
+#include "binaryexpression.h"      // Include BinaryExpression
+#include "ternaryexpression.h"     // Include TernaryExpression
+#include "quaternaryexpression.h"  // Include QuaternaryExpression
+// Include other necessary headers...
 
 SubExpression::SubExpression(Expression* left, Expression* right) {
     this->left = left;
@@ -25,18 +18,43 @@ SubExpression::SubExpression(Expression* left, Expression* right) {
 Expression* SubExpression::parse(stringstream& in) {
     Expression* left;
     Expression* right;
+    Expression* third;
+    Expression* fourth;
     char operation, paren;
-    
+
     left = Operand::parse(in);
     in >> operation;
-    right = Operand::parse(in);
-    in >> paren;
+
     switch (operation) {
         case '+':
-            return new Plus(left, right);
         case '-':
-            return new Minus(left, right);
+        case '*':
+        case '/':
+        case '%':
+        case '^':
+        case '<':
+        case '>':
+        case '&':
+            right = Operand::parse(in);
+            in >> paren;
+            return new BinaryExpression(left, right, operation);
+
+        case '?':
+            right = Operand::parse(in);
+            third = Operand::parse(in);
+            in >> paren;
+            return new TernaryExpression(left, right, third, operation);
+
+        case '#':
+            right = Operand::parse(in);
+            third = Operand::parse(in);
+            fourth = Operand::parse(in);
+            in >> paren;
+            return new QuaternaryExpression(left, right, third, fourth, operation);
+
+        // Handle other cases or default case as necessary
     }
-    return 0;
+
+    // Handle any remaining or default cases
+    return nullptr;
 }
-        
