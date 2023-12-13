@@ -1,28 +1,24 @@
-// CMSC 330 Advanced Programming Languages
-// Project 2 Skeleton
-// UMGC CITE
-// Spring 2023
+// SymbolTable.h
+#ifndef SYMBOLTABLE_H
+#define SYMBOLTABLE_H
 
-// Necessary includes
 #include <string>
 #include <vector>
-using namespace std;
 
 class SymbolTable {
 public:
-    SymbolTable() {}
-    void insert(string variable, double value);
-    double lookUp(string variable) const;
-    void clear();  // Add the clear method declaration
+    SymbolTable();
+    void insert(std::string variable, double value);
+    double lookUp(std::string variable) const;
+    void clear();
 
 private:
     struct Symbol {
-        Symbol(string variable, double value) {
-            this->variable = variable;
-            this->value = value;
-        }
-        string variable;
+        Symbol(std::string variable, double value) : variable(variable), value(value) {}
+        std::string variable;
         double value;
     };
-    vector<Symbol> elements;
+    std::vector<Symbol> elements;
 };
+
+#endif // SYMBOLTABLE_H

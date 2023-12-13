@@ -6,7 +6,7 @@
 // This file contains the definition of the Expression class, which is an abstract class that contains one
 // abstract (pure virtual) function named evaluate, which must be implemented by all its subclasses.
 
-class Expression {
+class expression {
 public: 
     virtual double evaluate() = 0;
     // Add new virtual functions here for new operations

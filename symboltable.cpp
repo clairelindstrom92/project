@@ -3,30 +3,24 @@
 // UMGC CITE
 // Spring 2023
 
-// This file contains the body of the functions contained in The SymbolTable class. The insert function 
-// inserts a new variable symbol and its value into the symbol table and the lookUp function returns
-// that value of the supplied variable symbol name.
+#include "symboltable.h"  // Only one include is needed
 
-#include <string>
-#include <vector>
-#include "symboltable.h"
 using namespace std;
 
-#include "symboltable.h"
-
 void SymbolTable::insert(string variable, double value) {
-    const Symbol& symbol = Symbol(variable, value);
-    elements.push_back(symbol);
+    // Directly construct the Symbol in the vector to avoid unnecessary copying
+    elements.emplace_back(variable, value);
 }
 
 double SymbolTable::lookUp(string variable) const {
-    for (int i = 0; i < elements.size(); i++)
-        if (elements[i].variable == variable)
-             return elements[i].value;
-    return -1;
+    // Use range-based for loop for better readability and efficiency
+    for (const auto& element : elements) {
+        if (element.variable == variable)
+            return element.value;
+    }
+    return -1; // Return -1 if the variable is not found
 }
+
 void SymbolTable::clear() {
-    elements.clear();
+    elements.clear();  // Clear the vector of symbols
 }
-
-
